@@ -1,3 +1,5 @@
+using Clase3Modulo3.Services;
+using Clase3Modulo3.Services.Interfaces;
 using EjercicioModulo3Clase2.Repository;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,9 +18,11 @@ namespace EjercicioModulo3Clase2
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddDbContext<ToDoListDBContext>(x =>
-                x.UseSqlServer("Data Source=DESKTOP-4DAU07Q\\SQLEXPRESS;Initial Catalog=ToDoListDB;Integrated Security=True;Encrypt=False")
-            ); 
+            var connection = builder.Configuration.GetConnectionString("DefaultConnection");
+
+            builder.Services.AddDbContext<ToDoListDBContext>(opt =>
+                    opt.UseSqlServer(connection));
+            builder.Services.AddScoped<ITasksServices, TasksServices>();
 
             var app = builder.Build();
 
